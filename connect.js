@@ -12,9 +12,9 @@ piWifi.connectTo(networkDetails, function(err) {
       piWifi.check(networkDetails.ssid, function (err, status) {
           console.log('status', status);
         if (!err && status.connected) {
-          console.log('Connected to the network ' + ssid + '!');
+          console.log('Connected to the network ' + networkDetails.ssid + '!');
         } else {
-          console.log('Unable to connect to the network ' + ssid + '!');
+          console.log('Unable to connect to the network ' + networkDetails.ssid + '!');
         }
       });
     }, 2000);
