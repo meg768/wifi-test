@@ -4,7 +4,7 @@ var options = {
   interface: 'wlan0',
   ssid: 'Romeo',
   passphrase: 'potatismos',
-  driver: 'nl80211'
+  driver: 'wext'
 };
 
 wpa_supplicant.enable(options, function(err) {
