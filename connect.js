@@ -6,7 +6,7 @@ var networkDetails = {
 };
 
 //A simple connection
-piWifi.connectTo(networkDetails}, function(err) {
+piWifi.connectTo(networkDetails, function(err) {
   if (!err) { //Network created correctly
     setTimeout(function () {
       piWifi.check(ssid, function (err, status) {
