@@ -9,7 +9,7 @@ var networkDetails = {
 piWifi.connectTo(networkDetails, function(err) {
   if (!err) { //Network created correctly
     setTimeout(function () {
-      piWifi.check(ssid, function (err, status) {
+      piWifi.check(networkDetails.ssid, function (err, status) {
           console.log('status', status);
         if (!err && status.connected) {
           console.log('Connected to the network ' + ssid + '!');
