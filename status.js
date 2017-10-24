@@ -1,6 +1,8 @@
+var piWifi = require('pi-wifi');
 
-var ifconfig = require('wireless-tools/ifconfig');
-
-ifconfig.status("wlan0", function(err, status) {
+piWifi.status('wlan0', function(err, status) {
+  if (err) {
+    return console.error(err.message);
+  }
   console.log(status);
 });
