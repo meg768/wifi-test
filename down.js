@@ -1,7 +1,8 @@
-var ifconfig = require('wireless-tools/ifconfig');
+var piWifi = require('pi-wifi');
 
-ifconfig.down('wlan0', function(err) {
-    console.log('Done');
-    console.log(err);
-  // the interface is down
+piWifi.interfaceDown('wlan0', function(err) {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Interface dropped succesfully!');
 });
