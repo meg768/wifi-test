@@ -6,11 +6,20 @@ var networkDetails = {
 };
 
 //A simple connection
-piWifi.connectTo(networkDetails, function(err) {
-  if(!err) {
-    console.log('Network created successfully!');
+piWifi.connectTo(networkDetails}, function(err) {
+  if (!err) { //Network created correctly
+    setTimeout(function () {
+      piWifi.check(ssid, function (err, status) {
+          console.log('status', status);
+        if (!err && status.connected) {
+          console.log('Connected to the network ' + ssid + '!');
+        } else {
+          console.log('Unable to connect to the network ' + ssid + '!');
+        }
+      });
+    }, 2000);
   } else {
-    console.log(err.message); //Failed to connect
+    console.log('Unable to create the network ' + ssid + '.');
   }
 });
 
