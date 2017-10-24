@@ -2,7 +2,7 @@ var piWifi = require('pi-wifi');
 
 var networkDetails = {
   ssid: 'Julia',
-  password: 'potatismos'
+  password: 'potatismosX'
 };
 
 //A simple connection
