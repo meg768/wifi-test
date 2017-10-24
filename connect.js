@@ -19,7 +19,7 @@ piWifi.connectTo(networkDetails, function(err) {
       });
     }, 2000);
   } else {
-    console.log('Unable to create the network ' + ssid + '.');
+    console.log('Unable to create the network ' + networkDetails.ssid + '.');
   }
 });
 
