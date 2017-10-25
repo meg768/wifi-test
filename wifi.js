@@ -16,8 +16,6 @@ class WiFi {
 
         return new Promise((resolve, reject) => {
 
-            console.log(command);
-
             child_process.exec(sprintf('wpa_cli -i %s %s', this.iface, command), (error, stdout, stderr) => {
                 if (error)
                     reject(error);
@@ -26,8 +24,6 @@ class WiFi {
 
                     if (pattern) {
                         var match = output.match(pattern);
-
-                        console.log('Matching', pattern, output, match);
 
                         if (match) {
                             if (match[1])
@@ -120,7 +116,7 @@ class WiFi {
 
     }
 
-    connectToNetwork(ssid, password, timeout) {
+    connectToNetwork(ssid, password, timeout = 20000) {
         return new Promise((resolve, reject) => {
 
             var networkID = undefined;
@@ -144,7 +140,7 @@ class WiFi {
             })
 
             .then(() => {
-                return this.waitForNetworkConnection(20000);
+                return this.waitForNetworkConnection(timeout);
             })
 
             .then(() => {
