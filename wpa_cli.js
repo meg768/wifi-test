@@ -84,7 +84,6 @@ module.exports = class WpaCli {
                 if ((match = output.match(/[^s]id=([0-9]+)/))) {
                     status.id = parseInt(match[1], 10);
                 }
-                */
 
                 resolve(status);
             })
