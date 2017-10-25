@@ -100,7 +100,7 @@ class WiFi {
                     var now = new Date();
 
                     if (now.getTime() - timestamp.getTime() < timeout) {
-                        return this.delay(500).then(() => {
+                        return this.delay(1000).then(() => {
                             return this.waitForNetworkConnection(timeout, timestamp);
                         })
                     }
