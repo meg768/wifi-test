@@ -37,4 +37,17 @@ module.exports = class WpaCli {
         });
 
     }
+
+    list_networks() {
+        return new Promise((resolve, reject) => {
+
+            this.exec('list_networks').then((output) => {
+                resolve(output);
+            })
+            .catch((error) => {
+                reject(error);
+            })
+        });
+
+    }
 }
