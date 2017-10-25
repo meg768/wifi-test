@@ -137,7 +137,7 @@ class WiFi {
                 return this.setNetworkVariable(networkID, 'ssid', ssid);
             })
             .then(() => {
-                return (isString(password) ? this.setNetworkVariable(networkID, 'psk', password); : Promise.resolve());
+                return (isString(password) ? this.setNetworkVariable(networkID, 'psk', password) : Promise.resolve());
             })
             .then(() => {
                 return this.selectNetwork(networkID);
