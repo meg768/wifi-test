@@ -76,7 +76,7 @@ function findConnection(ssid, callback) {
 * @param {function} callback Returns error if unable to set the interface
 */
 function setCurrentInterface(iface, callback) {
-  exec(replaceInCommand(commands.wpaInterface, { interface: iface }), function (err) { 
+  exec(replaceInCommand(commands.wpaInterface, { interface: iface }), function (err) {
     if (!err) currentInterface = iface;
     return callback(err);
   });
@@ -146,6 +146,7 @@ function connection(details, callback) {
     async.series({
       remove: function(next) { //Remove the network if found
         if (networkId === undefined) return next(undefined);
+        console.log('Removing connection', networkId);
         tools.wpa.remove_network(currentInterface, networkId, next);
       },
       create: function(next) { //Create a new network
@@ -219,12 +220,13 @@ function secureConnection(ssid, password, callback) {
 }
 
 
-/** 
+/**
 * @method createConnection
 * @description Creates a connection record and returns its network id if successful
 * @param {Function(err, networkId)} callback Returns error if the network creation fails, Network id
 */
 function createConnection(callback) {
+    console.log('Adding network', currentInterface);
   tools.wpa.add_network(currentInterface, function (err, netId) {
     if (!err && netId.hasOwnProperty('result')) netId = netId.result;
     callback(err, netId);
@@ -271,7 +273,7 @@ function setNetworkParameter(interface, networkId, name, value, callback) {
 * status('wlan0', function(err, status){
 *   if(!err) console.log(status);
 * });
-* // => 
+* // =>
 * {
 *   bssid: '2c:f5:d3:02:ea:d9',
 *   frequency: 2412,
@@ -292,7 +294,7 @@ function status(iface, cb) {
   if (cb === undefined) {
     cb = iface;
     iface = currentInterface;
-  }  
+  }
   tools.wpa.status(iface, cb);
 }
 
@@ -385,7 +387,7 @@ function detectSupplicant(callback) {
  */
 function startSupplicant(options, callback) {
   if (callback === undefined) callback = options; //If no options is passed and just the callback is provided
-  
+
   var iface = options.hasOwnProperty('iface') ? options.iface : currentInterface;
   var configFile = options.hasOwnProperty('config') ? options.config : defaultSupplicantConfigFile;
   var dnsFile = options.hasOwnProperty('dns') ? options.dns : defaultDNSFile;
