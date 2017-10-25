@@ -202,6 +202,8 @@ class WiFi {
                 var match;
                 var status = {};
 
+                console.log(output);
+
                 if ((match = output.match(/[^b]ssid=([^\n]+)/))) {
                     status.ssid = match[1];
                 }
@@ -209,6 +211,7 @@ class WiFi {
                 if ((match = output.match(/ip_address=([^\n]+)/))) {
                     status.ip_address = match[1];
                 }
+                console.log(status);
 
                 resolve(status);
             })
