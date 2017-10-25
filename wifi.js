@@ -85,7 +85,7 @@ class WiFi {
     }
 
     setNetworkVariable(id, name, value) {
-        console.log(sprintf('Setting variable %s=%s for network %d.', name, value, id);
+        console.log(sprintf('Setting variable %s=%s for network %d.', name, value, id));
         return this.wpa_cli(sprintf('set_network %d %s "%s"', id, name, value), '^OK');
     }
 
