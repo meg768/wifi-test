@@ -1,7 +1,7 @@
 
 
 var sprintf = require('yow/sprintf');
-var isString = require('yow/is').isString();
+var isString = require('yow/is').isString;
 var child_process = require('child_process');
 
 
