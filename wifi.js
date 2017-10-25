@@ -144,7 +144,7 @@ class WiFi {
             })
 
             .then(() => {
-                return this.waitForNetworkConnection(10000);
+                return this.waitForNetworkConnection(20000);
             })
 
             .then(() => {
