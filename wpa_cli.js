@@ -45,11 +45,11 @@ module.exports = class WpaCli {
 
                 output = output.split('\n');
 
-                var networks = [];
-
                 // Remove header and footer
-                lines.splice(0, 2);
-                lines.splice(lines.length - 1, 1);
+                output.splice(0, 2);
+                output.splice(lines.length - 1, 1);
+
+                var networks = [];
 
                 output.forEach((line) => {
                     var params = line.split('\t');
