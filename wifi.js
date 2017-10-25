@@ -46,7 +46,7 @@ class WiFi {
 
     addNetwork() {
         console.log('Adding network...');
-        this.wpa_cli('add_network', '^([0-9]+)');
+        return this.wpa_cli('add_network', '^([0-9]+)');
     }
 
     selectNetwork(id) {
