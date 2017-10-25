@@ -61,6 +61,7 @@ class WiFi {
                 return this.addNetwork();
             })
             .then((id) => {
+                console.log('Network created:', id);
                 networkID = parseInt(id);
                 return Promise.resolve();
             })
