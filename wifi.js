@@ -85,12 +85,12 @@ class WiFi {
     }
 
     setNetworkVariable(id, name, value) {
-        return this.wpa_cli_command(sprintf('set_network %d %s "%s"', id, name, value), '^OK');
+        return this.wpa_cli(sprintf('set_network %d %s "%s"', id, name, value), '^OK');
     }
 
     removeAllNetworks() {
         console.log('Removing all networks...');
-        
+
         return new Promise((resolve, reject) => {
             this.getNetworks().then((networks) => {
                 var promise = Promise.resolve();
