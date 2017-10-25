@@ -202,20 +202,13 @@ class WiFi {
                 var match;
                 var status = {};
 
-                console.log(output);
-
                 if ((match = output.match(/[^b]ssid=([^\n]+)/))) {
                     status.ssid = match[1];
-                }
-
-                if ((match = output.match(/wpa_state=([^\s]+)/))) {
-                    status.wpa_state = match[1];
                 }
 
                 if ((match = output.match(/ip_address=([^\n]+)/))) {
                     status.ip_address = match[1];
                 }
-                console.log(status);
 
                 resolve(status);
             })
