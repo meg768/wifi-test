@@ -34,8 +34,10 @@ class WiFi {
                             reject(new Error(sprintf('Could not parse reply from wpa_cli: "%s"', output)));
 
                     }
+                    else {
+                        resolve(output);
+                    }
                 }
-                    resolve(stdout.trim());
             });
         });
     }
