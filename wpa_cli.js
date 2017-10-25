@@ -47,7 +47,7 @@ module.exports = class WpaCli {
 
                 // Remove header and footer
                 output.splice(0, 2);
-                output.splice(lines.length - 1, 1);
+                output.splice(output.length - 1, 1);
 
                 var networks = [];
 
