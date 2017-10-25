@@ -15,6 +15,8 @@ class WiFi {
 
         return new Promise((resolve, reject) => {
 
+            console.log(command);
+
             child_process.exec(sprintf('wpa_cli -i %s %s', this.iface, command), (error, stdout, stderr) => {
                 if (error)
                     reject(error);
