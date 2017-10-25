@@ -184,7 +184,7 @@ function test() {
 
 
     var wifi = new WiFi();
-
+/*
     wifi.getNetworkStatus().then((output) => {
         console.log('Status');
         console.log('------');
@@ -202,7 +202,7 @@ function test() {
     .catch((error) => {
         console.log(error);
     });
-
+*/
     wifi.connectToNetwork('Julia', 'potatismos').then((output) => {
         console.log('Connected!');
     })
