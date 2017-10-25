@@ -4,7 +4,7 @@ var sprintf = require('yow/sprintf');
 var child_process = require('child_process');
 
 
-module.exports = class Wifi {
+class WiFi {
 
     constructor(iface = 'wlan0') {
         this.iface = iface;
@@ -90,7 +90,7 @@ module.exports = class Wifi {
 function test() {
 
 
-    var wifi = new Wifi();
+    var wifi = new WiFi();
 
     wifi.getStatus().then((output) => {
         console.log(output);
