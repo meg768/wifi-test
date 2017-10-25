@@ -67,7 +67,7 @@ class WiFi {
         return new Promise((resolve, reject) => {
 
             this.getNetworkStatus().then((status) => {
-                resolve(isString(status.ip_address);
+                resolve(isString(status.ip_address));
             })
 
             .catch((error) => {
