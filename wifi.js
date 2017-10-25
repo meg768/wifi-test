@@ -106,7 +106,7 @@ class WiFi {
     }
 
     removeNetwork(id) {
-        this.wpa_cli(sprintf('remove_network %d', id), '^OK').then((output) => {
+        this.wpa_cli(sprintf('remove_network %d', id), '^OK');
     }
 
     getNetworkStatus() {
