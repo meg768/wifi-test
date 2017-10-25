@@ -45,6 +45,7 @@ module.exports = class WpaCli {
 
                 output = output.split('\n');
 
+                console.log(output);
                 // Remove header and footer
                 output.splice(0, 2);
                 output.splice(output.length - 1, 1);
