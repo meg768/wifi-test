@@ -146,7 +146,7 @@ function connection(details, callback) {
     async.series({
       remove: function(next) { //Remove the network if found
         if (networkId === undefined) return next(undefined);
-        console.log('Removing connection', networkId);
+        console.log('Removing connection', networkId, currentInterface);
         tools.wpa.remove_network(currentInterface, networkId, next);
       },
       create: function(next) { //Create a new network
