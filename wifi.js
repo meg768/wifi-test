@@ -192,6 +192,14 @@ function test() {
         console.log(error);
     });
 
+    wifi.connectToNetwork('Julia', 'potatismos').then((output) => {
+        console.log('Connected!');
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+
 }
 
 test();
