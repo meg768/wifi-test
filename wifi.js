@@ -213,6 +213,7 @@ class WiFi {
                 if ((match = output.match(/ip_address=([^\n]+)/))) {
                     status.ip_address = match[1];
                 }
+                console.log(status);
 
                 resolve(status);
             })
