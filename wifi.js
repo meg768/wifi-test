@@ -43,10 +43,12 @@ class WiFi {
     }
 
     addNetwork() {
+        console.log('Adding network...');
         this.wpa_cli('add_network', '^([0-9]+)');
     }
 
     selectNetwork(id) {
+        console.log(sprintf('Selecting network %d...', id));
         return this.wpa_cli(sprintf('select_network %s', id), '^OK');
     }
 
@@ -59,7 +61,7 @@ class WiFi {
                 return this.addNetwork();
             })
             .then((id) => {
-                networkID = id;
+                networkID = parseInt(id);
                 return Promise.resolve();
             })
             .then(() => {
@@ -73,6 +75,9 @@ class WiFi {
             })
             .then(() => {
                 return this.selectNetwork(networkID);
+            })
+            .catch((error) => {
+                reject(error);
             })
         });
 
