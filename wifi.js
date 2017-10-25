@@ -89,6 +89,8 @@ class WiFi {
     }
 
     removeAllNetworks() {
+        console.log('Removing all networks...');
+        
         return new Promise((resolve, reject) => {
             this.getNetworks().then((networks) => {
                 var promise = Promise.resolve();
