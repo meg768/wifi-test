@@ -42,7 +42,26 @@ module.exports = class WpaCli {
         return new Promise((resolve, reject) => {
 
             this.exec('list_networks').then((output) => {
-                resolve(output);
+
+                var networks = [];
+                var lines = output.split('\n');
+                networksArray = [];
+                // Remove header and footer
+                lines.splice(0, 2);
+                lines.splice(lines.length - 1, 1);
+
+                lines.forEach((line) => {
+                    var params = line.split('\t');
+                    networks.push({
+                        network_id : params[0],
+                        ssid       : params[1],
+                        bssid      : params[2],
+                        flags      : params[3]
+                    });
+
+                });
+
+                resolve(networks);
             })
             .catch((error) => {
                 reject(error);
