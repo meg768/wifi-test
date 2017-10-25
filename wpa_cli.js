@@ -78,7 +78,7 @@ module.exports = class WpaCli {
                 }
 
                 if ((match = output.match(/uuid=([^\n]+)/))) {
-                    status.uuid = match[1];
+                    status.uuidX = match[1];
                 }
 
                 if ((match = output.match(/[^s]id=([0-9]+)/))) {
