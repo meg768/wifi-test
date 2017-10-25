@@ -174,7 +174,7 @@ function test() {
 
     var wifi = new WiFi();
 
-    wifi.getStatus().then((output) => {
+    wifi.getNetworkStatus().then((output) => {
         console.log('Status');
         console.log('------');
         console.log(output);
