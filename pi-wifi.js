@@ -145,8 +145,8 @@ function connection(details, callback) {
   findConnection(details.ssid, function (err, networkId) { //Look for an existing connection with that SSID
     async.series({
       remove: function(next) { //Remove the network if found
+          console.log('Removing connection', networkId, currentInterface);
         if (networkId === undefined) return next(undefined);
-        console.log('Removing connection', networkId, currentInterface);
         tools.wpa.remove_network(currentInterface, networkId, next);
       },
       create: function(next) { //Create a new network
