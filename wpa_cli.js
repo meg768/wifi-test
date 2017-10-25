@@ -29,7 +29,63 @@ module.exports = class WpaCli {
         return new Promise((resolve, reject) => {
 
             this.exec('status').then((output) => {
-                resolve(output);
+
+                var match;
+                var status = {};
+
+                if ((match = output.match(/bssid=([A-Fa-f0-9:]{17})/))) {
+                    status.bssid = match[1].toLowerCase();
+                }
+
+                if ((match = output.match(/freq=([0-9]+)/))) {
+                    status.frequency = parseInt(match[1], 10);
+                }
+
+                if ((match = output.match(/mode=([^\s]+)/))) {
+                    status.mode = match[1];
+                }
+
+                if ((match = output.match(/key_mgmt=([^\s]+)/))) {
+                    status.key_mgmt = match[1].toLowerCase();
+                }
+
+                if ((match = output.match(/[^b]ssid=([^\n]+)/))) {
+                    status.ssid = match[1];
+                }
+
+                if ((match = output.match(/[^b]pairwise_cipher=([^\n]+)/))) {
+                    status.pairwise_cipher = match[1];
+                }
+
+                if ((match = output.match(/[^b]group_cipher=([^\n]+)/))) {
+                    status.group_cipher = match[1];
+                }
+
+                if ((match = output.match(/p2p_device_address=([A-Fa-f0-9:]{17})/))) {
+                    status.p2p_device_address = match[1];
+                }
+
+                if ((match = output.match(/wpa_state=([^\s]+)/))) {
+                    status.wpa_state = match[1];
+                }
+
+                if ((match = output.match(/ip_address=([^\n]+)/))) {
+                    status.ip_address = match[1];
+                }
+
+                if ((match = output.match(/[^_]address=([A-Fa-f0-9:]{17})/))) {
+                    status.address = match[1].toLowerCase();
+                }
+
+                if ((match = output.match(/uuid=([^\n]+)/))) {
+                    status.uuid = match[1];
+                }
+
+                if ((match = output.match(/[^s]id=([0-9]+)/))) {
+                    status.id = parseInt(match[1], 10);
+                }
+
+                resolve(status);
             })
             .catch((error) => {
                 reject(error);
