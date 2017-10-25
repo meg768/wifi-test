@@ -4,7 +4,7 @@ var wpa_cli = require('./wpa_cli.js');
 
 var wpa = new wpa_cli('wlan0');
 
-wpa.status().then(output) => {
+wpa.status().then((output) => {
     console.log(output);
 })
 .catch((error) => {
