@@ -11,23 +11,103 @@ class WiFi {
     }
 
 
-    wpa_cli(command) {
+    wpa_cli(command, pattern) {
 
         return new Promise((resolve, reject) => {
 
             child_process.exec(sprintf('wpa_cli -i %s %s', this.iface, command), (error, stdout, stderr) => {
                 if (error)
                     reject(error);
-                else
-                    resolve(stdout.trim());
+                else {
+                    var output = stdout.trim();
 
+                    if (pattern) {
+                        var match = output.match(pattern);
+
+                        if (match) {
+                            if (match[1])
+                                resolve(match[1]);
+                            else
+                                resolve();
+                        }
+                        else
+                            reject(new Error(sprintf('Could not parse reply from wpa_cli: "%s"', output));
+
+                    }
+                }
+                    resolve(stdout.trim());
             });
         });
     }
 
+    addNetwork() {
+        this.wpa_cli('add_network', '^([0-9]+)');
+    }
+
+    selectNetwork(id) {
+        return this.wpa_cli(sprintf('select_network %s', id), '^OK');
+    }
+
+    connectToNetwork(ssid, password) {
+        return new Promise((resolve, reject) => {
+
+            var networkID = undefined;
+
+            this.removeAllNetworks().then(() => {
+                return this.addNetwork();
+            })
+            .then((id) => {
+                networkID = id;
+                return Promise.resolve();
+            })
+            .then(() => {
+                return this.setNetworkVariable(networkID, 'ssid', ssid);
+            })
+            .then(() => {
+                if (password != undefined)
+                    return this.setNetworkVariable(networkID, 'psk', password);
+                else
+                    return Promise.resolve();
+            })
+            .then(() => {
+                return this.selectNetwork(networkID);
+            })
+        });
 
 
-    getStatus() {
+    }
+
+    setNetworkVariable(id, name, value) {
+        return this.wpa_cli_command(sprintf('set_network %d %s "%s"', id, name, value), '^OK');
+    }
+
+    removeAllNetworks() {
+        return new Promise((resolve, reject) => {
+            this.getNetworks().then((networks) => {
+                var promise = Promise.resolve();
+
+                networks.forEach((network) => {
+                    promise = promise.then(() => {
+                        return this.removeNetwork(network.id);
+                    });
+                });
+
+                promise.then(() => {
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+            });
+        });
+
+    }
+
+    removeNetwork(id) {
+        this.wpa_cli(sprintf('remove_network %d', id), '^OK').then((output) => {
+    }
+
+    getNetworkStatus() {
         return new Promise((resolve, reject) => {
 
             this.wpa_cli('status').then((output) => {
@@ -71,7 +151,7 @@ class WiFi {
                 output.forEach((line) => {
                     var params = line.split('\t');
                     networks.push({
-                        id   : params[0],
+                        id   : parseInt(params[0]),
                         ssid : params[1]
                     });
 
