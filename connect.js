@@ -1,4 +1,4 @@
-var piWifi = require('pi-wifi');
+var piWifi = require('./pi-wifi.js');
 
 var networkDetails = {
   ssid: 'Julia',
