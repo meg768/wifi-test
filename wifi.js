@@ -24,6 +24,8 @@ class WiFi {
                     if (pattern) {
                         var match = output.match(pattern);
 
+                        console.log('Matching', pattern, output, match);
+
                         if (match) {
                             if (match[1])
                                 resolve(match[1]);
