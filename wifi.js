@@ -1,6 +1,7 @@
 
 
 var sprintf = require('yow/sprintf');
+var isString = require('yow/is').isString();
 var child_process = require('child_process');
 
 
@@ -56,7 +57,70 @@ class WiFi {
         return this.wpa_cli(sprintf('select_network %s', id), '^OK');
     }
 
-    connectToNetwork(ssid, password) {
+    saveConfiguration() {
+        console.log(sprintf('Saving configuration'));
+        return this.wpa_cli(sprintf('save_config'), '^OK');
+
+    }
+
+    isConnectedToNetwork() {
+        return new Promise((resolve, reject) => {
+
+            this.getNetworkStatus().then((status) => {
+                resolve(isString(status.ip_address);
+            })
+
+            .catch((error) => {
+                reject(error);
+            })
+        });
+
+    }
+
+    delay(ms) {
+        return new Promise((resolve, reject) => {
+            setTimeout(resolve, ms);
+        });
+    }
+
+
+    waitForNetworkConnection(timeout, timestamp) {
+
+        if (timestamp == undefined)
+            timestamp = new Date();
+
+        return new Promise((resolve, reject) => {
+
+            this.isConnectedToNetwork().then((connected) => {
+
+                if (connected) {
+                    return Promise.resolve();
+                }
+                else {
+                    var now = new Date();
+
+                    if (now.getTime() - timestamp.getTime() < timeout) {
+                        return this.delay(500).then(() => {
+                            return this.waitForNetworkConnection(timeout, timestamp);
+                        })
+                    }
+                    else
+                        throw new Error('Unable to connect to network.');
+                }
+            })
+
+            .then(() => {
+                resolve();
+            })
+            .catch((error) => {
+                reject(error);
+            });
+
+        });
+
+    }
+
+    connectToNetwork(ssid, password, timeout) {
         return new Promise((resolve, reject) => {
 
             var networkID = undefined;
@@ -73,19 +137,27 @@ class WiFi {
                 return this.setNetworkVariable(networkID, 'ssid', ssid);
             })
             .then(() => {
-                if (password != undefined)
-                    return this.setNetworkVariable(networkID, 'psk', password);
-                else
-                    return Promise.resolve();
+                return (isString(password) ? this.setNetworkVariable(networkID, 'psk', password); : Promise.resolve());
             })
             .then(() => {
                 return this.selectNetwork(networkID);
+            })
+
+            .then(() => {
+                return this.waitForNetworkConnection();
+            })
+
+            .then(() => {
+                return this.saveConfiguration();
+            })
+
+            .then(() => {
+                resolve();
             })
             .catch((error) => {
                 reject(error);
             })
         });
-
 
     }
 
