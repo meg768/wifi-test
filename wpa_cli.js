@@ -33,22 +33,6 @@ module.exports = class WpaCli {
                 var match;
                 var status = {};
 
-                function extract(value) {
-                    var regexp = new RegExp(output, 'm');
-                    var pattern = sprintf('^%s=([^\n]+)', value);
-
-                    var match = regexp.match(pattern);
-
-                    if (match) {
-                        status[value] = match[1];
-                    }
-
-                }
-
-                extract('bssid');
-                extract('frequence');
-                extract('ssid');
-/*
                 if ((match = output.match(/bssid=([A-Fa-f0-9:]{17})/))) {
                     status.bssid = match[1].toLowerCase();
                 }
