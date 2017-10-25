@@ -93,6 +93,17 @@ function test() {
     var wifi = new WiFi();
 
     wifi.getStatus().then((output) => {
+        console.log('Status');
+        console.log('------');
+        console.log(output);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+    wifi.getNetworks().then((output) => {
+        console.log('Networks');
+        console.log('--------');
         console.log(output);
     })
     .catch((error) => {
