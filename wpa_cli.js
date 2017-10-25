@@ -43,14 +43,15 @@ module.exports = class WpaCli {
 
             this.exec('list_networks').then((output) => {
 
+                output = output.split('\n');
+
                 var networks = [];
-                var lines = output.split('\n');
-                networksArray = [];
+
                 // Remove header and footer
                 lines.splice(0, 2);
                 lines.splice(lines.length - 1, 1);
 
-                lines.forEach((line) => {
+                output.forEach((line) => {
                     var params = line.split('\t');
                     networks.push({
                         network_id : params[0],
