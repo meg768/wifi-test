@@ -1,6 +1,6 @@
 
 var WiFi = require('./wifi.js');
- 
+
 function install(fileName) {
     var fs = require('fs');
 
@@ -15,7 +15,7 @@ function install(fileName) {
 
     function deleteFile() {
         try {
-            fs.unlinkSync(fileName);
+            //fs.unlinkSync(fileName);
         }
         catch(error) {
             console.log(error);
