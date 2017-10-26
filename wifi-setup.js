@@ -3,6 +3,10 @@ var WiFi = require('./wifi-connection.js');
 var isString = require('yow/is').isString;
 var Events  = require('events');
 
+function debug() {
+    console.log.apply(this, arguments);
+}
+
 class WifiSetup extends Events {
 
     constructor() {
@@ -18,7 +22,7 @@ class WifiSetup extends Events {
                 return JSON.parse(fs.readFileSync(fileName));
             }
             catch(error) {
-                console.log(error);
+                debug(error);
             }
         }
 
@@ -27,7 +31,7 @@ class WifiSetup extends Events {
                 //fs.unlinkSync(fileName);
             }
             catch(error) {
-                console.log(error);
+                debug(error);
             }
 
         }
@@ -37,39 +41,42 @@ class WifiSetup extends Events {
 
             wifi.getConnectionState().then((connected) => {
                 if (!connected) {
-                    console.log('Not connected, trying to connect');
-
                     var config = loadFile();
 
                     if (config && isString(config.ssid)) {
                         this.emit('connecting');
 
-                        console.log('Trying to connect to ', config.ssid);
-
-                        return wifi.connectToNetwork(config.ssid, config.password).then(() => {
+                        return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
                             this.emit('connected');
-
-                        });
+                        })
+                        .catch((error) => {
+                            this.emit('disconnected');
+                        })
                     }
                     else {
-                        console.log('No network credentials in config file.');
                         return Promise.resolve();
                     }
                 }
                 else {
-                    console.log('Already connected!');
                     return Promise.resolve();
                 }
             })
             .then(() => {
-                deleteFile();
-                this.emit('done');
+                return wifi.getConnectionState();
+            });
+            .then((connected) => {
+
+                if (!connected)
+                    throw new Error('Could not connect.');
+
                 resolve();
             })
             .catch((error) => {
-                this.emit('error', error);
                 reject(error);
-            });
+            })
+            .then(() => {
+                deleteFile();
+            })
 
         });
     }
@@ -79,28 +86,24 @@ class WifiSetup extends Events {
 var setup = new WifiSetup();
 
 setup.on('connecting', () => {
-    console.log('connecting');
-});
-
-setup.on('done', () => {
-    console.log('done!');
+    debug('connecting');
 });
 
 setup.on('connected', () => {
-    console.log('connected!');
+    debug('connected!');
 });
 
-setup.on('error', (error) => {
-    console.log('ERROR!!');
-    console.log(error);
+setup.on('disconnected', () => {
+    debug('disconnected!');
 });
+
 
 
 setup.setup('/boot/bluetooth/config.json').then(() => {
-    console.log('Done!');
+    debug('Done!');
 
 })
 .catch((error) => {
-    console.log('Upps!');
-    console.log(error);
+    debug('Upps!');
+    debug(error);
 })
