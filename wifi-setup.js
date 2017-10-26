@@ -28,7 +28,7 @@ class WifiSetup extends Events {
 
         function deleteFile() {
             try {
-                //fs.unlinkSync(fileName);
+                fs.unlinkSync(fileName);
             }
             catch(error) {
                 debug(error);
@@ -36,45 +36,40 @@ class WifiSetup extends Events {
 
         }
 
-        return new Promise((resolve, reject) => {
-            var wifi = new WiFi();
+        var wifi = new WiFi();
 
-            Promise.resolve().then(() => {
-                return Promise.resolve(loadFile());
-            })
-            .then((config) => {
-                if (config && isString(config.ssid)) {
-                    this.emit('connecting');
+        Promise.resolve().then(() => {
+            return Promise.resolve(loadFile());
+        })
 
-                    return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
-                        this.emit('connected');
-                        return true;
-                    })
-                    .catch((error) => {
-                        this.emit('disconnected');
-                        return false;
-                    })
-                }
-                else {
-                    return wifi.getConnectionState();
-                }
-            })
+        .then((config) => {
+            if (config && isString(config.ssid)) {
+                this.emit('connecting');
 
-            .then((connected) => {
-                console.log('state', connected);
-                if (!connected)
-                    throw new Error('No network connection.');
+                return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
+                    this.emit('connected');
+                    return true;
+                })
+                .catch((error) => {
+                    this.emit('disconnected');
+                    return false;
+                })
+            }
+            else {
+                return wifi.getConnectionState();
+            }
+        })
 
-                resolve();
-            })
-            .catch((error) => {
-                reject(error);
-            })
-            .then(() => {
-                deleteFile();
-            })
+        .then((connected) => {
+            this.emit('ready', connected);
+        })
+        .catch((error) => {
+            this.emit('error', error.message);
+        })
+        .then(() => {
+            deleteFile();
+        })
 
-        });
     }
 
 }
@@ -93,16 +88,9 @@ setup.on('disconnected', () => {
     debug('disconnected!');
 });
 
-setup.on('ready', () => {
+setup.on('ready', (connection) => {
     debug('ready!');
 });
 
 
-setup.setup('/boot/bluetooth/config.json').then(() => {
-    debug('Done!');
-
-})
-.catch((error) => {
-    debug('Upps!');
-    debug(error);
-})
+setup.setup('/boot/bluetooth/config.json');
