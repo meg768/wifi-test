@@ -6,7 +6,7 @@ var child_process = require('child_process');
 
 
 
-module.exports = class WiFi {
+class WiFi {
 
     constructor(iface = 'wlan0') {
         this.iface = iface;
