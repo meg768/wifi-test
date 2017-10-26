@@ -62,13 +62,6 @@ class WifiSetup extends Events {
                 }
             })
             .then(() => {
-                return wifi.getConnectionState();
-            });
-            .then((connected) => {
-
-                if (!connected)
-                    throw new Error('Could not connect.');
-
                 resolve();
             })
             .catch((error) => {
