@@ -87,7 +87,7 @@ setup.on('done', () => {
 });
 
 setup.on('connected', () => {
-    console.log('done!');
+    console.log('connected!');
 });
 
 setup.on('error', (error) => {
