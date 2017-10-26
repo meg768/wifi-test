@@ -44,7 +44,7 @@ class WifiSetup extends Events {
 
         .then((config) => {
             if (config && isString(config.ssid)) {
-                this.emit('connecting');
+                this.emit('working');
 
                 return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
                     return true;
