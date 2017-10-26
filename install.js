@@ -63,7 +63,7 @@ class WifiSetup extends Events {
             })
             .then(() => {
                 deleteFile();
-                this.emit('done', error);
+                this.emit('done');
                 resolve();
             })
             .catch((error) => {
