@@ -6,7 +6,7 @@ var child_process = require('child_process');
 
 
 function debug() {
-    console.log.apply(this, arguments);
+    //console.log.apply(this, arguments);
 }
 
 module.exports = class WiFi {
