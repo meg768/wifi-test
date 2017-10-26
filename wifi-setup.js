@@ -39,29 +39,31 @@ class WifiSetup extends Events {
         return new Promise((resolve, reject) => {
             var wifi = new WiFi();
 
-            wifi.getConnectionState().then((connected) => {
-                if (!connected) {
-                    var config = loadFile();
+            Promise.resolve().then(() => {
+                return Promise.resolve(loadFile());
+            })
+            .then((config) => {
+                if (config && isString(config.ssid)) {
+                    this.emit('connecting');
 
-                    if (config && isString(config.ssid)) {
-                        this.emit('connecting');
-
-                        return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
-                            this.emit('connected');
-                        })
-                        .catch((error) => {
-                            this.emit('disconnected');
-                        })
-                    }
-                    else {
-                        return Promise.resolve();
-                    }
+                    return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
+                        this.emit('connected');
+                    })
+                    .catch((error) => {
+                        this.emit('disconnected');
+                    })
                 }
                 else {
                     return Promise.resolve();
                 }
             })
             .then(() => {
+                return wifi.getConnectionState();
+            })
+            .then((connected) => {
+                if (!connected)
+                    throw new Error('No network connection.');
+
                 resolve();
             })
             .catch((error) => {
@@ -90,6 +92,9 @@ setup.on('disconnected', () => {
     debug('disconnected!');
 });
 
+setup.on('ready', () => {
+    debug('ready!');
+});
 
 
 setup.setup('/boot/bluetooth/config.json').then(() => {
