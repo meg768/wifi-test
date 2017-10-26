@@ -263,7 +263,7 @@ function install(fileName) {
 
     function deleteFile() {
         try {
-            fs.unlinkSynk(fileName);
+            fs.unlinkSync(fileName);
         }
         catch(error) {
             console.log(error);
@@ -299,6 +299,7 @@ function install(fileName) {
             resolve();
         })
         .catch((error) => {
+            console.log('Upps!');
             reject(error);
         });
 
