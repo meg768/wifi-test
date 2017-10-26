@@ -74,9 +74,6 @@ class WifiSetup extends Events {
         });
     }
 
-    setup() {
-
-    }
 }
 
 var setup = new WifiSetup();
