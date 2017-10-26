@@ -1,5 +1,7 @@
 
 var WiFi = require('./wifi.js');
+var isString = require('yow/is').isString;
+
 
 function install(fileName) {
     var fs = require('fs');
