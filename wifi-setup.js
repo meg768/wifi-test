@@ -47,11 +47,9 @@ class WifiSetup extends Events {
                 this.emit('connecting');
 
                 return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
-                    this.emit('connected');
                     return true;
                 })
                 .catch((error) => {
-                    this.emit('disconnected');
                     return false;
                 })
             }
@@ -61,10 +59,13 @@ class WifiSetup extends Events {
         })
 
         .then((connected) => {
-            this.emit('ready', connected);
+            if (!connected)
+                throw new Error('No wi-fi connection.');
+
+            this.emit('ready');
         })
         .catch((error) => {
-            this.emit('error', error.message);
+            this.emit('error', error);
         })
         .then(() => {
             deleteFile();
@@ -76,20 +77,17 @@ class WifiSetup extends Events {
 
 var setup = new WifiSetup();
 
-setup.on('connecting', () => {
-    debug('connecting');
-});
-
-setup.on('connected', () => {
-    debug('connected!');
-});
-
-setup.on('disconnected', () => {
-    debug('disconnected!');
+setup.on('working', () => {
+    debug('working');
 });
 
 setup.on('ready', (connection) => {
     debug('ready!');
+});
+
+setup.on('error', (error) => {
+    console.log(error);
+    debug('error!');
 });
 
 
