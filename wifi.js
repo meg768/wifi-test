@@ -5,7 +5,8 @@ var isString = require('yow/is').isString;
 var child_process = require('child_process');
 
 
-class WiFi {
+
+module.exports = class WiFi {
 
     constructor(iface = 'wlan0') {
         this.iface = iface;
@@ -59,7 +60,7 @@ class WiFi {
 
     }
 
-    isConnectedToNetwork() {
+    getConnectionState() {
         return new Promise((resolve, reject) => {
 
             this.getNetworkStatus().then((status) => {
@@ -87,7 +88,7 @@ class WiFi {
 
         return new Promise((resolve, reject) => {
 
-            this.isConnectedToNetwork().then((connected) => {
+            this.getConnectionState().then((connected) => {
 
                 if (connected) {
                     return Promise.resolve();
@@ -116,46 +117,6 @@ class WiFi {
 
     }
 
-    connectToNetwork(ssid, password, timeout = 20000) {
-        return new Promise((resolve, reject) => {
-
-            var networkID = undefined;
-
-            this.removeAllNetworks().then(() => {
-                return this.addNetwork();
-            })
-            .then((id) => {
-                console.log('Network created:', id);
-                networkID = parseInt(id);
-                return Promise.resolve();
-            })
-            .then(() => {
-                return this.setNetworkVariable(networkID, 'ssid', ssid);
-            })
-            .then(() => {
-                return (isString(password) ? this.setNetworkVariable(networkID, 'psk', password) : Promise.resolve());
-            })
-            .then(() => {
-                return this.selectNetwork(networkID);
-            })
-
-            .then(() => {
-                return this.waitForNetworkConnection(timeout);
-            })
-
-            .then(() => {
-                return this.saveConfiguration();
-            })
-
-            .then(() => {
-                resolve();
-            })
-            .catch((error) => {
-                reject(error);
-            })
-        });
-
-    }
 
     setNetworkVariable(id, name, value) {
         console.log(sprintf('Setting variable %s=%s for network %d.', name, value, id));
@@ -244,39 +205,105 @@ class WiFi {
         });
 
     }
+
+
+    connectToNetwork(ssid, password, timeout = 20000) {
+        return new Promise((resolve, reject) => {
+
+            var networkID = undefined;
+
+            this.removeAllNetworks().then(() => {
+                return this.addNetwork();
+            })
+            .then((id) => {
+                console.log('Network created:', id);
+                networkID = parseInt(id);
+                return Promise.resolve();
+            })
+            .then(() => {
+                return this.setNetworkVariable(networkID, 'ssid', ssid);
+            })
+            .then(() => {
+                return (isString(password) ? this.setNetworkVariable(networkID, 'psk', password) : Promise.resolve());
+            })
+            .then(() => {
+                return this.selectNetwork(networkID);
+            })
+
+            .then(() => {
+                return this.waitForNetworkConnection(timeout);
+            })
+
+            .then(() => {
+                return this.saveConfiguration();
+            })
+
+            .then(() => {
+                resolve();
+            })
+            .catch((error) => {
+                reject(error);
+            })
+        });
+
+    }
 }
 
-function test() {
+function install(fileName) {
+    var fs = require('fs');
 
+    function loadFile() {
+        try {
+            return JSON.parse(fs.readFileSync(fileName));
+        }
+        catch(error) {
+            console.log(error);
+        }
+    }
 
-    var wifi = new WiFi();
-/*
-    wifi.getNetworkStatus().then((output) => {
-        console.log('Status');
-        console.log('------');
-        console.log(output);
-    })
-    .catch((error) => {
-        console.log(error);
+    function deleteFile() {
+        try {
+            fs.unlinkSynk(fileName);
+        }
+        catch(error) {
+            console.log(error);
+        }
+
+    }
+
+    return new Promise((resolve, reject) => {
+        var wifi = new WiFi();
+
+        wifi.getConnectionState().then((connected) => {
+            if (!connected) {
+                console.log('Not connected, trying to connect');
+
+                var config = loadFile();
+
+                if (config && isString(config.ssid)) {
+                    console.log('Trying to connect to ', config.ssid);
+                    return wifi.connectToNetwork(config.ssid, config.password);
+                }
+                else {
+                    console.log('No network credentials in config file.');
+                    return Promise.resolve();
+                }
+            }
+            else {
+                console.log('Already connected!');
+                return Promise.resolve();
+            }
+        })
+        .then(() => {
+            deleteFile();
+            resolve();
+        })
+        .catch((error) => {
+            reject(error);
+        });
+
     });
-
-    wifi.getNetworks().then((output) => {
-        console.log('Networks');
-        console.log('--------');
-        console.log(output);
-    })
-    .catch((error) => {
-        console.log(error);
-    });
-*/
-    wifi.connectToNetwork('Julia', 'potatismos').then((output) => {
-        console.log('Connected!');
-    })
-    .catch((error) => {
-        console.log(error);
-    });
-
-
 }
 
-test();
+
+install('/boot/bluetooth/config.json');
