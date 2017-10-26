@@ -48,19 +48,20 @@ class WifiSetup extends Events {
 
                     return wifi.connectToNetwork(config.ssid, config.password, 30000).then(() => {
                         this.emit('connected');
+                        return true;
                     })
                     .catch((error) => {
                         this.emit('disconnected');
+                        return false;
                     })
                 }
                 else {
-                    return Promise.resolve();
+                    return wifi.getConnectionState();
                 }
             })
-            .then(() => {
-                return wifi.getConnectionState();
-            })
+
             .then((connected) => {
+                console.log('state', connected);
                 if (!connected)
                     throw new Error('No network connection.');
 
