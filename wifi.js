@@ -299,7 +299,6 @@ function install(fileName) {
             resolve();
         })
         .catch((error) => {
-            console.log('Upps!');
             reject(error);
         });
 
@@ -307,4 +306,11 @@ function install(fileName) {
 }
 
 
-install('/boot/bluetooth/config.json');
+install('/boot/bluetooth/config.json').then(() => {
+    console.log('Done§!');
+
+})
+.catch((error) => {
+    console.log('Upps!');
+    console.log(error);
+})
